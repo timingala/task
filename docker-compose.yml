@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=https://maestro-api-dev.secil.biz
+    container_name: collection-platform
+    ports:
+      - "3000:3000"
+    environment:
+      # NextAuth Configuration
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=your-super-secret-key-please-change-in-production-2024
+      
+      # CRITICAL: Trust host for production
+      - AUTH_TRUST_HOST=true
+      - NEXTAUTH_URL_INTERNAL=http://localhost:3000
+      
+      # API Configuration
+      - NEXT_PUBLIC_API_URL=https://maestro-api-dev.secil.biz
+      
+      # Node Environment
+      - NODE_ENV=production
+      
+    restart: unless-stopped
+    networks:
+      - app-network
+      
+image: ceydigital/task-app:latest
+
+networks:
+  app-network:
+    driver: bridge
